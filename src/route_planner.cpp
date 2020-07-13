@@ -39,14 +39,12 @@ void RoutePlanner::AddNeighbors(RouteModel::Node *current_node) {
     for (auto neighbor: current_node->neighbors) {
         // propose new g value
         float new_g_value = current_node->g_value + current_node->distance(*neighbor);
-        if (new_g_value < neighbor->g_value) {
             neighbor->h_value = CalculateHValue(neighbor);
             neighbor->g_value = new_g_value;
             neighbor->parent = current_node;
             open_list.push_back(neighbor);
-        }
+            current_node->visited = true;
     }
-    current_node->visited = true;
 }
 
 
@@ -109,7 +107,8 @@ void RoutePlanner::AStarSearch() {
     RouteModel::Node *current_node = nullptr;
 
     // TODO: Implement your solution here.
-    AddNeighbors(start_node);
+    start_node ->visited=true;
+    open_list.push_back(start_node);
     while (!open_list.empty()) {
         auto next_node = NextNode();
         if (next_node == end_node) {
